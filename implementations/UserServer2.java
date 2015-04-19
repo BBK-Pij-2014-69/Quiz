@@ -1,8 +1,11 @@
 package quiz.implementations;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -20,6 +23,17 @@ public class UserServer2 extends UnicastRemoteObject implements UserService2 {
 
 	public UserServer2() throws RemoteException {
 		super();
+		if (file.exists()){
+			try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))){
+				userList = (ArrayList<User>) in.readObject();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
