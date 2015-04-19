@@ -9,4 +9,6 @@ public interface UserService2 extends Remote {
 	
 	User checkUser(String userName, String password) throws RemoteException;
 	
+	void saveData() throws RemoteException;
+	
 }

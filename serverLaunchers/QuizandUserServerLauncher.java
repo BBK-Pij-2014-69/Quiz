@@ -18,6 +18,7 @@ public class QuizandUserServerLauncher {
 		Runtime.getRuntime().addShutdownHook(new Thread(){
 			public void run(){
 				quizServer.saveData();
+				userServer.saveData();
 			}
 		});
 		qsl.launch();

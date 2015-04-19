@@ -1,5 +1,9 @@
 package quiz.implementations;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -12,6 +16,7 @@ public class UserServer2 extends UnicastRemoteObject implements UserService2 {
 
 	private static final long serialVersionUID = -4235598071289639752L;
 	private static List<User> userList = new ArrayList<User>();
+	private static final File file = new File("userServer.txt");
 
 	public UserServer2() throws RemoteException {
 		super();
@@ -50,6 +55,22 @@ public class UserServer2 extends UnicastRemoteObject implements UserService2 {
 			if (s.equals(null) || s.equals("")){
 				throw new IllegalArgumentException("invalid username/password");
 			}
+		}
+	}
+	
+	@Override
+	public void saveData(){
+		if (file.exists()){
+			try{
+				file.delete();
+			} catch (Exception e) {
+				e.printStackTrace();
+	        }
+		}
+		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))){
+			out.writeObject(userList);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

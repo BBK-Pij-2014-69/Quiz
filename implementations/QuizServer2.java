@@ -173,6 +173,7 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 		return temp;
 	}
 
+	@Override
 	public void saveData(){
 		if (file.exists()){
 			try{
