@@ -5,6 +5,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import quiz.interfaces.CompletedQuizUser;
 import quiz.interfaces.Question;
 import quiz.interfaces.Quiz;
 import quiz.interfaces.QuizService2;
@@ -14,9 +15,8 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 
 	private static final long serialVersionUID = -6976763377726698928L;
 	private static List<Quiz> quizList = new ArrayList<Quiz>();
+	private static List<Quiz> activeQuizList = new ArrayList<Quiz>();
 	private static int quizId = 0;
-	private Quiz tempQuiz;
-	private Question tempQuestion;
 	
 	public QuizServer2() throws RemoteException {
 		super();
@@ -26,7 +26,7 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 	public int createEmptyQuiz(User creator, String quizTitle) throws RemoteException {
 		CheckNull(quizTitle);
 		quizId++;
-		tempQuiz = new QuizImpl(quizTitle, quizId, creator);
+		quizList.add( new QuizImpl(quizTitle, quizId, creator));
 		return quizId;
 	}
 
@@ -56,19 +56,6 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 		}else{
 			throw new IllegalArgumentException("invalid id. please use a number 1-5");
 		}
-
-	}
-
-	@Override
-	public void AddQuestionToQuiz() throws RemoteException {
-		tempQuiz.addQuestion(tempQuestion);
-
-	}
-
-	@Override
-	public int finishQuizSetUp() throws RemoteException {
-		quizList.add(tempQuiz);
-		return tempQuiz.getId();
 	}
 
 	private void CheckNull(String argument){
@@ -97,4 +84,49 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 		}
 		return 0;
 	}
+
+	@Override
+	public int getNumberOfQuestions(int currentQuizId) throws RemoteException {
+		int temp = 0;
+		for (Quiz q : quizList){
+			if (q.getId() == currentQuizId) temp = q.getQuestionList().size();
+		}
+		return temp;
+	}
+
+	@Override
+	public Question getQuestion(int currentQuizId, int i) throws RemoteException {
+		Question temp = null;
+		for (Quiz q : quizList){
+			if (q.getId() == currentQuizId) temp = q.getQuestionList().get(i);
+		}
+		return temp;
+	}
+
+	@Override
+	public void deleteQuestion(int currentQuizId, int i) throws RemoteException {
+		for (Quiz q : quizList){
+			if (q.getId() == currentQuizId) q.getQuestionList().remove(i);
+		}
+	}
+
+	@Override
+	public void ActivateQuiz(int currentQuizId) throws RemoteException {
+		Quiz temp = null;
+		for (Quiz q : quizList){
+			if (q.getId() == currentQuizId) { 
+				activeQuizList.add(q);
+				temp = q;
+			}
+		}
+		quizList.remove(temp);
+	}
+
+	@Override
+	public CompletedQuizUser closeQuiz(int id) throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }

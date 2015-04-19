@@ -2,7 +2,7 @@ package quiz.interfaces;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public interface Quiz extends Remote {
 
@@ -10,7 +10,7 @@ public interface Quiz extends Remote {
 	
 	int getId() throws RemoteException;
 	
-	ArrayList<Question> getQuestionList() throws RemoteException;
+	LinkedList<Question> getQuestionList() throws RemoteException;
 	
 	void addQuestion(Question q) throws RemoteException;
 	

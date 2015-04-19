@@ -37,8 +37,8 @@ public class QuizImpl implements Quiz, Serializable {
 	}
 
 	@Override
-	public ArrayList<Question> getQuestionList() throws RemoteException {
-		return (ArrayList<Question>) questionList;
+	public LinkedList<Question> getQuestionList() throws RemoteException {
+		return (LinkedList<Question>) questionList;
 	}
 
 	@Override

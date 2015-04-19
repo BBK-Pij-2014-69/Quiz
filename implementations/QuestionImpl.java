@@ -1,12 +1,15 @@
 package quiz.implementations;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import quiz.interfaces.Answer;
 import quiz.interfaces.Question;
 
-public class QuestionImpl implements Question {
+public class QuestionImpl implements Question, Serializable {
+
+	private static final long serialVersionUID = -199888619757711060L;
 	private int actualAnswer;
 	private String name;
 	private List<Answer> answers = new ArrayList<Answer>();

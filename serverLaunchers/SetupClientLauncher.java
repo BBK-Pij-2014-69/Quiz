@@ -7,6 +7,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
+import quiz.interfaces.Question;
 import quiz.interfaces.QuizService2;
 import quiz.interfaces.User;
 import quiz.interfaces.UserService2;
@@ -54,12 +55,33 @@ public class SetupClientLauncher {
 				break;
 			case "2" : amendQuiz();
 				break;
+			case "3" : activateQuiz();
+				break;
+			case "4" : CloseQuiz();
+				break;
 			default : System.out.println("invalid choice");
 			}
 		}while(!finished);
 	}
 
 	
+	private void CloseQuiz() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void activateQuiz() throws MalformedURLException, RemoteException, NotBoundException {
+		QuizService2 qs = connectToQuizServer();
+		System.out.println("Are you sure you want to activate your quiz (it can not be amended after this point)?   (y/n)");
+		if (input.nextLine().toLowerCase().equals("y")){
+			qs.ActivateQuiz(currentQuizId);
+			System.out.println("your quiz is now active");
+			currentQuizId = 0;
+		}else{
+			System.out.println("your quiz has not been activated");
+		}
+	}
+
 	private void makeNewQuiz() throws MalformedURLException, RemoteException, NotBoundException{
 		QuizService2 qs = connectToQuizServer();
 		boolean finished = false;
@@ -68,6 +90,7 @@ public class SetupClientLauncher {
 				System.out.println("Please give your quiz a title: ");
 				String title = input.nextLine();
 				currentQuizId = qs.createEmptyQuiz(user, title);
+				System.out.println("The Id for this quiz is: " + currentQuizId);
 				finished = true;
 			}catch (IllegalArgumentException e){
 				System.out.println(e.getMessage());
@@ -102,8 +125,18 @@ public class SetupClientLauncher {
 		}while (!finished);
 	}	
 	
-	private void deleteQuestion() {
-		// TODO Auto-generated method stub
+	private void deleteQuestion() throws MalformedURLException, RemoteException, NotBoundException {
+		QuizService2 qs = connectToQuizServer();
+		int numberOfQuestions = qs.getNumberOfQuestions(currentQuizId);
+		Question temp = null;
+		for(int i = 0; i < numberOfQuestions; i ++){
+			temp = qs.getQuestion(currentQuizId, i);
+			System.out.println(temp.getName() + nl + "Delete this question? (y/n)");
+			if (input.nextLine().toLowerCase().equals("y")){
+				qs.deleteQuestion(currentQuizId, i);
+				numberOfQuestions = qs.getNumberOfQuestions(currentQuizId);
+			}
+		}
 		
 	}
 
@@ -111,15 +144,34 @@ public class SetupClientLauncher {
 		QuizService2 qs = connectToQuizServer();
 		System.out.println("What is your question: ");
 		qs.addQuestionToQuiz(input.nextLine(), currentQuizId);
-		int numberOfAnswersLeft = 5;
+		addAnswers();
+		boolean answerCorrect = false;
 		do{
-			System.out.println("Please enter " + numberOfAnswersLeft + " more answers:");
-			String answer = input.nextLine();
-			qs.addAnswerstoQuestions(answer, currentQuizId);
-			numberOfAnswersLeft --;
-		}while(numberOfAnswersLeft != 0);
-		System.out.println("Which answer (1,2,3,4 or 5) was correct? ");
-		qs.setActualAnswer(currentQuizId, Integer.parseInt(input.nextLine()));//catch number format exception
+			try{
+				System.out.println("Which answer (1,2,3,4 or 5) was correct? ");
+				qs.setActualAnswer(currentQuizId, Integer.parseInt(input.nextLine()));
+				answerCorrect = true;
+			}catch (NumberFormatException e){
+				System.out.println("not a number, please try again");
+			}catch (IllegalArgumentException ex){
+				System.out.println(ex.getMessage());
+			}
+		}while (!answerCorrect);
+	}
+	
+	private void addAnswers() throws MalformedURLException, RemoteException, NotBoundException {
+		QuizService2 qs = connectToQuizServer();
+		try{
+			int numberOfAnswersLeft = 5;
+			do{
+				System.out.println("Please enter " + numberOfAnswersLeft + " more answers:");
+				String answer = input.nextLine();
+				qs.addAnswerstoQuestions(answer, currentQuizId);
+				numberOfAnswersLeft --;
+			}while(numberOfAnswersLeft != 0);
+		}catch (IllegalArgumentException e){
+			System.out.println(e.getMessage());
+		}
 	}
 
 	private void loginUser() throws RemoteException, MalformedURLException, NotBoundException {

@@ -1,11 +1,14 @@
 package quiz.implementations;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
 import quiz.interfaces.CompletedQuizUser;
 import quiz.interfaces.User;
 
-public class CompletedQuizUserImpl implements CompletedQuizUser {
+public class CompletedQuizUserImpl implements CompletedQuizUser, Serializable {
+
+	private static final long serialVersionUID = 6815463083445351700L;
 	private User user;
 	private int score;
 	private long time;

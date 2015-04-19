@@ -14,12 +14,18 @@ public interface QuizService2 extends Remote {
 	
 	void setActualAnswer(int quizId, int answerId) throws RemoteException;
 	
-	void AddQuestionToQuiz() throws RemoteException;
-	
-	int finishQuizSetUp() throws RemoteException;
-	
 	List<Quiz> getQuizs() throws RemoteException;
 	
 	int checkQuizandCreator(User user, int id) throws RemoteException;
+
+	int getNumberOfQuestions(int currentQuizId) throws RemoteException;
+
+	Question getQuestion(int currentQuizId, int i) throws RemoteException;
+
+	void deleteQuestion(int currentQuizId, int i) throws RemoteException;
+	
+	void ActivateQuiz(int currentQuizId) throws RemoteException;
+	
+	CompletedQuizUser closeQuiz(int id) throws RemoteException;
 
 }
