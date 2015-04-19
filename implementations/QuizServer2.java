@@ -113,18 +113,30 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 	}
 
 	@Override
-	public int getNumberOfQuestions(int currentQuizId) throws RemoteException {
+	public int getNumberOfQuestions(int currentQuizId, String listToCheck) throws RemoteException {
 		int temp = 0;
-		for (Quiz q : quizList){
+		List<Quiz> whichList = null;
+		if (listToCheck.equals("activeQuizList")){
+			whichList = activeQuizList;
+		}else{
+			whichList = quizList;
+		}
+		for (Quiz q : whichList){
 			if (q.getId() == currentQuizId) temp = q.getQuestionList().size();
 		}
 		return temp;
 	}
 
 	@Override
-	public Question getQuestion(int currentQuizId, int i) throws RemoteException {
+	public Question getQuestion(int currentQuizId, int i, String listToCheck) throws RemoteException {
 		Question temp = null;
-		for (Quiz q : quizList){
+		List<Quiz> whichList = null;
+		if (listToCheck.equals("activeQuizList")){
+			whichList = activeQuizList;
+		}else{
+			whichList = quizList;
+		}
+		for (Quiz q : whichList){
 			if (q.getId() == currentQuizId) temp = q.getQuestionList().get(i);
 		}
 		return temp;
@@ -166,6 +178,8 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 		}
 		for (CompletedQuizUser c : tempList){
 			if (c.getScore() > temp.getScore()){
+				temp = c;
+			}else if (c.getScore() == temp.getScore()){
 				if (c.getTime() < temp.getTime()) temp = c;
 			}
 		}
@@ -194,7 +208,30 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 	@Override
 	public String getQuizTitles(int i) throws RemoteException {
 		String stringtoReturn = "";
-		stringtoReturn = activeQuizList.get(i).getQuizName() + ". " + activeQuizList.get(i).getQuizName();
+		stringtoReturn = activeQuizList.get(i).getId() + ". " + activeQuizList.get(i).getQuizName();
 		return stringtoReturn;
+	}
+
+	@Override
+	public int checkIfActiveQuiz(String nextLine) throws RemoteException {
+		int intToReturn = 0;
+		try{
+			for (Quiz q : activeQuizList){
+				if (q.getId() == Integer.parseInt(nextLine)) intToReturn = q.getId();
+			}
+			if (intToReturn == 0) throw new IllegalArgumentException("Not an active quiz");
+		}catch (NumberFormatException e){
+			throw new IllegalArgumentException("Not a number");
+		}
+		return intToReturn;
+	}
+
+	
+	@Override
+	public int finishTakingQuiz(int quizId, User user, int score, int time) throws RemoteException {
+		for (Quiz q : activeQuizList){
+			if (q.getId() == quizId) q.addCompletedQuizUser(new CompletedQuizUserImpl(user, score, time));;
+		}
+		return score;
 	}
 }

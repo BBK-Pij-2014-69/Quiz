@@ -18,9 +18,9 @@ public interface QuizService2 extends Remote {
 	
 	int checkQuizandCreator(User user, int id, String listToCheck) throws RemoteException;
 
-	int getNumberOfQuestions(int currentQuizId) throws RemoteException;
+	int getNumberOfQuestions(int currentQuizId, String listToCheck) throws RemoteException;
 
-	Question getQuestion(int currentQuizId, int i) throws RemoteException;
+	Question getQuestion(int currentQuizId, int i, String listToCheck) throws RemoteException;
 
 	void deleteQuestion(int currentQuizId, int i) throws RemoteException;
 	
@@ -31,6 +31,10 @@ public interface QuizService2 extends Remote {
 	void saveData() throws RemoteException;
 
 	String getQuizTitles(int i) throws RemoteException;
+
+	int checkIfActiveQuiz(String nextLine) throws RemoteException;
+
+	int finishTakingQuiz(int quizId, User user, int score, int time) throws RemoteException;
 	
 
 }
