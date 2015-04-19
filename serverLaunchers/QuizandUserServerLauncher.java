@@ -10,9 +10,16 @@ import quiz.implementations.UserServer2;
 
 
 public class QuizandUserServerLauncher {
+	private static QuizServer2 quizServer = null;
+	private static UserServer2 userServer = null;
 
 	public static void main(String[] args) {
 		QuizandUserServerLauncher qsl = new QuizandUserServerLauncher();
+		Runtime.getRuntime().addShutdownHook(new Thread(){
+			public void run(){
+				quizServer.saveData();
+			}
+		});
 		qsl.launch();
 
 	}
@@ -22,8 +29,8 @@ public class QuizandUserServerLauncher {
 		}
 		try {
 			LocateRegistry.createRegistry(1099);
-			QuizServer2 quizServer = new QuizServer2();
-			UserServer2 userServer = new UserServer2();
+			quizServer = new QuizServer2();
+			userServer = new UserServer2();
 			String registryHostQS = "//localhost/quiz";
 			String registryHostUS = "//localhost/user";
 			Naming.rebind(registryHostQS,  quizServer);

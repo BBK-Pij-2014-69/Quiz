@@ -27,5 +27,7 @@ public interface QuizService2 extends Remote {
 	void ActivateQuiz(int currentQuizId) throws RemoteException;
 	
 	CompletedQuizUser closeQuiz(int id) throws RemoteException;
+	
+	void saveData() throws RemoteException;
 
 }

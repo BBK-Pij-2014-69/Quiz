@@ -1,5 +1,12 @@
 package quiz.implementations;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -17,10 +24,24 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 	private static List<Quiz> quizList = new ArrayList<Quiz>();
 	private static List<Quiz> activeQuizList = new ArrayList<Quiz>();
 	private static int quizId = 0;
-	private static final CompletedQuizUser defaultUser = new CompletedQuizUserImpl(new UserImpl("no one", "a"), 0, 0);
+	private static final CompletedQuizUser defaultUser = new CompletedQuizUserImpl(new UserImpl("no one", "a"), 0, 0); //used for comparison and empty list.
+	private static final File file = new File("quizServer.txt");
 	
 	public QuizServer2() throws RemoteException {
 		super();
+		if (file.exists()){
+			try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))){
+				quizList = (ArrayList<Quiz>) in.readObject();
+				activeQuizList = (ArrayList<Quiz>) in.readObject();
+				quizId = (int) in.readObject();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
@@ -152,5 +173,20 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 		return temp;
 	}
 
-	
+	public void saveData(){
+		if (file.exists()){
+			try{
+				file.delete();
+			} catch (Exception e) {
+				e.printStackTrace();
+	        }
+		}
+		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))){
+			out.writeObject(quizList);
+			out.writeObject(activeQuizList);
+			out.writeObject(quizId);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
