@@ -88,7 +88,7 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 
 	@Override
 	public List<Quiz> getQuizs() throws RemoteException {
-		return quizList;
+		return activeQuizList;
 	}
 
 	@Override
@@ -189,5 +189,12 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public String getQuizTitles(int i) throws RemoteException {
+		String stringtoReturn = "";
+		stringtoReturn = activeQuizList.get(i).getQuizName() + ". " + activeQuizList.get(i).getQuizName();
+		return stringtoReturn;
 	}
 }

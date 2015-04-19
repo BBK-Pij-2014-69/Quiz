@@ -30,4 +30,7 @@ public interface QuizService2 extends Remote {
 	
 	void saveData() throws RemoteException;
 
+	String getQuizTitles(int i) throws RemoteException;
+	
+
 }
