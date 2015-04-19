@@ -16,7 +16,7 @@ public interface QuizService2 extends Remote {
 	
 	List<Quiz> getQuizs() throws RemoteException;
 	
-	int checkQuizandCreator(User user, int id) throws RemoteException;
+	int checkQuizandCreator(User user, int id, String listToCheck) throws RemoteException;
 
 	int getNumberOfQuestions(int currentQuizId) throws RemoteException;
 

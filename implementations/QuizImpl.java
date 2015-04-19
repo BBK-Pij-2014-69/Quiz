@@ -57,8 +57,8 @@ public class QuizImpl implements Quiz, Serializable {
 	}
 
 	@Override
-	public User getWinner() throws RemoteException {
-		return null;
+	public ArrayList<CompletedQuizUser> getCompletedQuizUserList() throws RemoteException {
+		return (ArrayList<CompletedQuizUser>) userList;
 	}
 
 	@Override

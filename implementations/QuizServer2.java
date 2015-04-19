@@ -17,6 +17,7 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 	private static List<Quiz> quizList = new ArrayList<Quiz>();
 	private static List<Quiz> activeQuizList = new ArrayList<Quiz>();
 	private static int quizId = 0;
+	private static final CompletedQuizUser defaultUser = new CompletedQuizUserImpl(new UserImpl("no one", "a"), 0, 0);
 	
 	public QuizServer2() throws RemoteException {
 		super();
@@ -70,19 +71,24 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 	}
 
 	@Override
-	public int checkQuizandCreator(User user, int id) throws RemoteException {
-		for (Quiz q : quizList){
+	public int checkQuizandCreator(User user, int id, String listToCheck) throws RemoteException {
+		List<Quiz> whichList = null;
+		if (listToCheck.equals("activeQuizList")){
+			whichList = activeQuizList;
+		}else{
+			whichList = quizList;
+		}
+		if (whichList.isEmpty()) return 0;
+		for (Quiz q : whichList){
 			if (q.getId() == id){
 				if (q.getCreator().equals(user)){
 					return id;
 				}else{
 					throw new IllegalArgumentException("you are not the creator of this quiz");
 				}
-			}else{
-				throw new IllegalArgumentException("this id does not correspond to a quiz");
 			}
 		}
-		return 0;
+		throw new IllegalArgumentException("this id does not correspond to a quiz");
 	}
 
 	@Override
@@ -124,8 +130,26 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 
 	@Override
 	public CompletedQuizUser closeQuiz(int id) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		CompletedQuizUser temp = defaultUser;
+		ArrayList<CompletedQuizUser> tempList = null;
+		int indexToRemove = -1;
+		for (Quiz q : activeQuizList){
+			if (q.getId() == id){
+				tempList = q.getCompletedQuizUserList();
+				if (tempList.isEmpty()){
+					q.addCompletedQuizUser(defaultUser);
+					throw new IllegalArgumentException("No one has taken this quiz");
+				}
+				indexToRemove = activeQuizList.indexOf(q);
+			}
+		}
+		for (CompletedQuizUser c : tempList){
+			if (c.getScore() > temp.getScore()){
+				if (c.getTime() < temp.getTime()) temp = c;
+			}
+		}
+		activeQuizList.remove(indexToRemove);
+		return temp;
 	}
 
 	

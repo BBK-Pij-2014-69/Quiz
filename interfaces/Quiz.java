@@ -2,6 +2,7 @@ package quiz.interfaces;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public interface Quiz extends Remote {
@@ -16,7 +17,7 @@ public interface Quiz extends Remote {
 	
 	User getCreator() throws RemoteException;
 	
-	User getWinner() throws RemoteException;
+	ArrayList<CompletedQuizUser> getCompletedQuizUserList() throws RemoteException;
 	
 	void addCompletedQuizUser(CompletedQuizUser user) throws RemoteException;
 	
