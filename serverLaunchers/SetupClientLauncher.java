@@ -80,7 +80,7 @@ public class SetupClientLauncher {
 				winner = qs.closeQuiz(currentQuizId);
 				System.out.println("The winner of the quiz is: " + winner.getUser().getName() + nl + 
 						"The winner's score was: " + winner.getScore() + nl +
-						"The winners time was: " + winner.getTime());
+						"The winners time was: " + winner.getTime() + " seconds");
 				finished = true;
 				System.out.println("The quiz has now closed");
 			}catch (IllegalArgumentException e){
@@ -169,14 +169,14 @@ public class SetupClientLauncher {
 	
 	private void deleteQuestion() throws MalformedURLException, RemoteException, NotBoundException {
 		QuizService2 qs = connectToQuizServer();
-		int numberOfQuestions = qs.getNumberOfQuestions(currentQuizId);
+		int numberOfQuestions = qs.getNumberOfQuestions(currentQuizId, "quizList");
 		Question temp = null;
 		for(int i = 0; i < numberOfQuestions; i ++){
-			temp = qs.getQuestion(currentQuizId, i);
+			temp = qs.getQuestion(currentQuizId, i, "quizList");
 			System.out.println(temp.getName() + nl + "Delete this question? (y/n)");
 			if (input.nextLine().toLowerCase().equals("y")){
 				qs.deleteQuestion(currentQuizId, i);
-				numberOfQuestions = qs.getNumberOfQuestions(currentQuizId);
+				numberOfQuestions = qs.getNumberOfQuestions(currentQuizId, "quizList");
 			}
 		}
 		
