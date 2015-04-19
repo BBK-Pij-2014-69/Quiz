@@ -7,6 +7,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
+import quiz.interfaces.CompletedQuizUser;
 import quiz.interfaces.Question;
 import quiz.interfaces.QuizService2;
 import quiz.interfaces.User;
@@ -65,13 +66,18 @@ public class SetupClientLauncher {
 	}
 
 	
-	private void CloseQuiz() {
-		// TODO Auto-generated method stub
-		
+	private void CloseQuiz() throws MalformedURLException, RemoteException, NotBoundException {
+		QuizService2 qs = connectToQuizServer();
+		setCurrentQuizId("close");
+		CompletedQuizUser winner = qs.closeQuiz(currentQuizId);
+		System.out.println("The winner of the quiz is: " + winner.getUser().getName() + nl + 
+				"The winner's score was: " + winner.getScore() + nl +
+				"The winners time was: " + winner.getTime());
 	}
 
 	private void activateQuiz() throws MalformedURLException, RemoteException, NotBoundException {
 		QuizService2 qs = connectToQuizServer();
+		setCurrentQuizId("activate");
 		System.out.println("Are you sure you want to activate your quiz (it can not be amended after this point)?   (y/n)");
 		if (input.nextLine().toLowerCase().equals("y")){
 			qs.ActivateQuiz(currentQuizId);
@@ -100,20 +106,13 @@ public class SetupClientLauncher {
 	}
 	
 	private void amendQuiz() throws MalformedURLException, RemoteException, NotBoundException{
-		QuizService2 qs = connectToQuizServer();
-		while (currentQuizId == 0){
-			try{
-				System.out.println("Please enter the id for the quiz you wish to amend: ");
-				currentQuizId = qs.checkQuizandCreator(user, Integer.parseInt(input.nextLine()));
-			}catch (IllegalArgumentException e){
-				System.out.println(e.getMessage());
-			}			
-		}
+		if (currentQuizId == 0) setCurrentQuizId("amend");
 		boolean finished = false;
 		do{
 		System.out.println("Would you like to add a new question (1) or delete a question (2)?" + nl + "0 to finish");
 			switch (input.nextLine()){
-				case "0": finished = true;
+				case "0": currentQuizId = 0;
+						  finished = true;
 						break;
 				case "1": addQuestion();
 						break;
@@ -124,6 +123,18 @@ public class SetupClientLauncher {
 			}
 		}while (!finished);
 	}	
+	
+	private void setCurrentQuizId(String s) throws MalformedURLException, RemoteException, NotBoundException{
+		QuizService2 qs = connectToQuizServer();
+		while (currentQuizId == 0){
+			try{
+				System.out.println("Please enter the id for the quiz you wish to " + s + ":");
+				currentQuizId = qs.checkQuizandCreator(user, Integer.parseInt(input.nextLine()));
+			}catch (IllegalArgumentException e){
+				System.out.println(e.getMessage());
+			}			
+		}
+	}
 	
 	private void deleteQuestion() throws MalformedURLException, RemoteException, NotBoundException {
 		QuizService2 qs = connectToQuizServer();
