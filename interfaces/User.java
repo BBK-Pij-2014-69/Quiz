@@ -18,7 +18,8 @@ public interface User extends Remote {
 	 * Returns the name of the user.
 	 * 
 	 * @return the users name
-	 * @throws RemoteException
+	 * @throws RemoteException or IllegalArgumentException if a user with 
+	 * that name already exists.
 	 */
 	String getName() throws RemoteException;
 	
@@ -26,7 +27,8 @@ public interface User extends Remote {
 	 * Returns the password of the user.
 	 * 
 	 * @return the users password
-	 * @throws RemoteException
+	 * @throws RemoteException or IllegalArgumentException if an invalid
+	 * password for the specific user is used.
 	 */
 	String getPassword() throws RemoteException;
 	

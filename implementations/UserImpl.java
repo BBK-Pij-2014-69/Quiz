@@ -4,22 +4,38 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import quiz.interfaces.User;
 
+/**
+ * @see User
+ * @author Kieren Millar
+ *
+ */
 public class UserImpl implements User, Serializable {
 	
 	private static final long serialVersionUID = -6935053537097396014L;
 	private String name;
 	private String password;
 
+	/**
+	 * Constructor accepting a name and password.
+	 * @param name
+	 * @param password
+	 */
 	public UserImpl(String name, String password){
 		this.name = name;
 		this.password = password;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	public String getName() throws RemoteException {
 		return name;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	public String getPassword() throws RemoteException {
 		return password;
@@ -27,7 +43,7 @@ public class UserImpl implements User, Serializable {
 	
 	/**
 	 * Overridden equals method for comparing two Users,
-	 * only returns true if the id, name, and notes are equal.
+	 * only returns true if the id, and passwords are equal.
 	 * 
 	 */
 	@Override
@@ -45,7 +61,7 @@ public class UserImpl implements User, Serializable {
 	}
 	
 	/**
-	 * Overridden hashcode method using id, name and notes as parameters
+	 * Overridden hashcode method using name and password as parameters
 	 * to produce the hashcode. 
 	 */
 	@Override
