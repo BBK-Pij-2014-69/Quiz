@@ -1,4 +1,4 @@
-package quiz.serverLaunchers;
+package quiz.serverAndClientLaunchers;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -10,9 +10,9 @@ import java.util.Scanner;
 
 import quiz.interfaces.Answer;
 import quiz.interfaces.Question;
-import quiz.interfaces.QuizService2;
+import quiz.interfaces.QuizService;
 import quiz.interfaces.User;
-import quiz.interfaces.UserService2;
+import quiz.interfaces.UserService;
 
 public class PlayerClientLauncher {
 
@@ -61,7 +61,7 @@ public class PlayerClientLauncher {
 	}
 	
 	private void loadQuizMenu() throws MalformedURLException, RemoteException, NotBoundException {
-		QuizService2 qs = connectToQuizServer();
+		QuizService qs = connectToQuizServer();
 		System.out.println("Please select a quiz to play (1, 2, 3..." + nl);
 		int quizListSize = qs.getQuizs().size();
 		if (quizListSize > 0){
@@ -84,7 +84,7 @@ public class PlayerClientLauncher {
 	}
 
 	private void playQuiz(int quizId) throws MalformedURLException, RemoteException, NotBoundException {
-		QuizService2 qs = connectToQuizServer();
+		QuizService qs = connectToQuizServer();
 		int score = 0;
 		int numberOfQuestions = qs.getNumberOfQuestions(quizId, "activeQuizList");
 		int time = LocalTime.now().toSecondOfDay();
@@ -110,7 +110,7 @@ public class PlayerClientLauncher {
 	}
 
 	private void loginUser() throws RemoteException, MalformedURLException, NotBoundException {
-		UserService2 us = conectToUserServer();
+		UserService us = conectToUserServer();
 		boolean finished = false;
 		do{
 			try{
@@ -127,7 +127,7 @@ public class PlayerClientLauncher {
 	}
 	
 	private void createNewUser() throws RemoteException, MalformedURLException, NotBoundException {
-		UserService2 us = conectToUserServer();
+		UserService us = conectToUserServer();
 		boolean finished = false;
 		do{
 			try{
@@ -143,19 +143,19 @@ public class PlayerClientLauncher {
 		}while (!finished);
 	}
 
-	private UserService2 conectToUserServer() throws RemoteException, NotBoundException, MalformedURLException{
+	private UserService conectToUserServer() throws RemoteException, NotBoundException, MalformedURLException{
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());
 		}
 		Remote service = Naming.lookup("//127.0.0.1:1099/user");
-		return (UserService2) service;
+		return (UserService) service;
 	}
 	
-	private QuizService2 connectToQuizServer() throws MalformedURLException, RemoteException, NotBoundException {
+	private QuizService connectToQuizServer() throws MalformedURLException, RemoteException, NotBoundException {
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());
 		}
 		Remote service = Naming.lookup("//127.0.0.1:1099/quiz");
-		return (QuizService2) service;
+		return (QuizService) service;
 	}
 }

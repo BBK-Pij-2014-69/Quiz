@@ -13,15 +13,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import quiz.interfaces.User;
-import quiz.interfaces.UserService2;
+import quiz.interfaces.UserService;
 
-public class UserServer2 extends UnicastRemoteObject implements UserService2 {
+/**
+ * @see UserService
+ * @author Kieren Millar
+ *
+ */
+public class UserServer extends UnicastRemoteObject implements UserService {
 
 	private static final long serialVersionUID = -4235598071289639752L;
 	private static List<User> userList = new ArrayList<User>();
 	private static final File file = new File("userServer.txt");
 
-	public UserServer2() throws RemoteException {
+	/**
+	 * Constructor that implements the super method from UnicastRemoteObject 
+	 * and reads data from a disk on startup, if a file exists.
+	 * 
+	 * @throws RemoteException
+	 */
+	public UserServer() throws RemoteException {
 		super();
 		if (file.exists()){
 			try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))){
@@ -36,6 +47,9 @@ public class UserServer2 extends UnicastRemoteObject implements UserService2 {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public User addUser(String userName, String password) throws RemoteException {
 		checkNull(userName, password);
@@ -49,6 +63,9 @@ public class UserServer2 extends UnicastRemoteObject implements UserService2 {
 		return user;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public User checkUser(String userName, String password) throws RemoteException {
 		checkNull(userName, password);
@@ -64,6 +81,12 @@ public class UserServer2 extends UnicastRemoteObject implements UserService2 {
 		throw new IllegalArgumentException("user does not exist");
 	}
 	
+	/**
+	 * Private method for checking for null or empty strings.
+	 * 
+	 * @param string's to be checked
+	 * @throws RemoteException
+	 */
 	private void checkNull(String... arguments) throws RemoteException{
 		for (String s : arguments){
 			if (s.equals(null) || s.equals("")){
@@ -72,6 +95,9 @@ public class UserServer2 extends UnicastRemoteObject implements UserService2 {
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void saveData(){
 		if (file.exists()){

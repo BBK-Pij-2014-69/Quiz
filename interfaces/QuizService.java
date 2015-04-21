@@ -4,7 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public interface QuizService2 extends Remote {
+public interface QuizService extends Remote {
 	
 	int createEmptyQuiz(User creator, String quizTitle) throws RemoteException;
 	

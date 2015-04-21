@@ -15,10 +15,10 @@ import java.util.List;
 import quiz.interfaces.CompletedQuizUser;
 import quiz.interfaces.Question;
 import quiz.interfaces.Quiz;
-import quiz.interfaces.QuizService2;
+import quiz.interfaces.QuizService;
 import quiz.interfaces.User;
 
-public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
+public class QuizServer extends UnicastRemoteObject implements QuizService {
 
 	private static final long serialVersionUID = -6976763377726698928L;
 	private static List<Quiz> quizList = new ArrayList<Quiz>();
@@ -27,7 +27,7 @@ public class QuizServer2 extends UnicastRemoteObject implements QuizService2 {
 	private static final CompletedQuizUser defaultUser = new CompletedQuizUserImpl(new UserImpl("no one", "a"), 0, 0); //used for comparison and empty list.
 	private static final File file = new File("quizServer.txt");
 	
-	public QuizServer2() throws RemoteException {
+	public QuizServer() throws RemoteException {
 		super();
 		if (file.exists()){
 			try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))){
