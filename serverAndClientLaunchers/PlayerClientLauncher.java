@@ -62,7 +62,7 @@ public class PlayerClientLauncher {
 	
 	private void loadQuizMenu() throws MalformedURLException, RemoteException, NotBoundException {
 		QuizService qs = connectToQuizServer();
-		System.out.println("Please select a quiz to play (1, 2, 3..." + nl);
+		System.out.println("Please select a quiz to play (1, 2, 3...)" + nl);
 		int quizListSize = qs.getQuizs().size();
 		if (quizListSize > 0){
 			for (int i = 0; i < quizListSize; i++){

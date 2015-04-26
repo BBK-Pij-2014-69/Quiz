@@ -18,6 +18,11 @@ import quiz.interfaces.Quiz;
 import quiz.interfaces.QuizService;
 import quiz.interfaces.User;
 
+/**
+ * @see QuizService
+ * @author Kieren Millar
+ *
+ */
 public class QuizServer extends UnicastRemoteObject implements QuizService {
 
 	private static final long serialVersionUID = -6976763377726698928L;
@@ -27,6 +32,11 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 	private static final CompletedQuizUser defaultUser = new CompletedQuizUserImpl(new UserImpl("no one", "a"), 0, 0); //used for comparison and empty list.
 	private static final File file = new File("quizServer.txt");
 	
+	/**
+	 * Constructor that calls super for UnicastRemoteObject and loads data from
+	 * a file if it it exists.
+	 * @throws RemoteException
+	 */
 	public QuizServer() throws RemoteException {
 		super();
 		if (file.exists()){
@@ -44,6 +54,9 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int createEmptyQuiz(User creator, String quizTitle) throws RemoteException {
 		CheckNull(quizTitle);
@@ -52,6 +65,9 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 		return quizId;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void addQuestionToQuiz(String question, int quizId) throws RemoteException {
 		CheckNull(question);
@@ -61,6 +77,9 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void addAnswerstoQuestions(String answer, int quizId) throws RemoteException {
 		CheckNull(answer);
@@ -69,6 +88,9 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setActualAnswer(int quizId, int answerId) throws RemoteException {
 		if (answerId > 0 && answerId < 6){
@@ -80,17 +102,27 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 		}
 	}
 
+	/**
+	 * Private method for checking if an argument is null.
+	 * @param argument
+	 */
 	private void CheckNull(String argument){
 		if (argument.equals(null) || argument.equals("")){
 			throw new IllegalArgumentException("null argument");
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<Quiz> getQuizs() throws RemoteException {
 		return activeQuizList;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int checkQuizandCreator(User user, int id, String listToCheck) throws RemoteException {
 		List<Quiz> whichList = null;
@@ -112,6 +144,9 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 		throw new IllegalArgumentException("this id does not correspond to a quiz");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int getNumberOfQuestions(int currentQuizId, String listToCheck) throws RemoteException {
 		int temp = 0;
@@ -127,6 +162,9 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 		return temp;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Question getQuestion(int currentQuizId, int i, String listToCheck) throws RemoteException {
 		Question temp = null;
@@ -142,6 +180,9 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 		return temp;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void deleteQuestion(int currentQuizId, int i) throws RemoteException {
 		for (Quiz q : quizList){
@@ -149,6 +190,9 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void ActivateQuiz(int currentQuizId) throws RemoteException {
 		Quiz temp = null;
@@ -161,6 +205,9 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 		quizList.remove(temp);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public CompletedQuizUser closeQuiz(int id) throws RemoteException {
 		CompletedQuizUser temp = defaultUser;
@@ -187,6 +234,9 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 		return temp;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void saveData(){
 		if (file.exists()){
@@ -205,6 +255,9 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getQuizTitles(int i) throws RemoteException {
 		String stringtoReturn = "";
@@ -212,6 +265,9 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 		return stringtoReturn;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int checkIfActiveQuiz(String nextLine) throws RemoteException {
 		int intToReturn = 0;
@@ -226,7 +282,9 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 		return intToReturn;
 	}
 
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int finishTakingQuiz(int quizId, User user, int score, int time) throws RemoteException {
 		for (Quiz q : activeQuizList){
