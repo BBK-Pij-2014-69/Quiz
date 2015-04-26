@@ -14,13 +14,14 @@ import quiz.interfaces.User;
 import quiz.interfaces.UserService;
 
 public class SetupClientLauncher {
-	public User user;
-	public int currentQuizId = 0;
+	public User user;//stores current user
+	public int currentQuizId = 0;//stores the current quiz id that is being edited.
 	public Scanner input = new Scanner(System.in);
 	public String nl = System.lineSeparator();
 
 	public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException {
 		SetupClientLauncher scl = new SetupClientLauncher();
+		System.out.println("Welcome to Kieren Millar's Quiz creator" + System.lineSeparator());
 		scl.loadLoginMenu();
 	}
 	
@@ -63,6 +64,8 @@ public class SetupClientLauncher {
 			default : System.out.println("invalid choice");
 			}
 		}while(!finished);
+		System.out.println(nl + "Goodbye.");
+		System.exit(0);
 	}
 
 	

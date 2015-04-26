@@ -51,7 +51,7 @@ public class UserServer extends UnicastRemoteObject implements UserService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public User addUser(String userName, String password) throws RemoteException {
+	public synchronized User addUser(String userName, String password) throws RemoteException {
 		checkNull(userName, password);
 		for (User u : userList){
 			if (userName.equals(u.getName())){

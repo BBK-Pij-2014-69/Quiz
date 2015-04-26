@@ -58,7 +58,7 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int createEmptyQuiz(User creator, String quizTitle) throws RemoteException {
+	public synchronized int createEmptyQuiz(User creator, String quizTitle) throws RemoteException {
 		CheckNull(quizTitle);
 		quizId++;
 		quizList.add( new QuizImpl(quizTitle, quizId, creator));
@@ -269,11 +269,11 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int checkIfActiveQuiz(String nextLine) throws RemoteException {
+	public int checkIfActiveQuiz(String quizId) throws RemoteException {
 		int intToReturn = 0;
 		try{
 			for (Quiz q : activeQuizList){
-				if (q.getId() == Integer.parseInt(nextLine)) intToReturn = q.getId();
+				if (q.getId() == Integer.parseInt(quizId)) intToReturn = q.getId();
 			}
 			if (intToReturn == 0) throw new IllegalArgumentException("Not an active quiz");
 		}catch (NumberFormatException e){

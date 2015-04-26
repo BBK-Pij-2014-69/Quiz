@@ -14,20 +14,26 @@ import quiz.interfaces.QuizService;
 import quiz.interfaces.User;
 import quiz.interfaces.UserService;
 
+/**
+ * Client launcher for someone who wishes to create a quiz.
+ * 
+ * @author Kieren Millar
+ */
 public class PlayerClientLauncher {
 
 	public Scanner input = new Scanner(System.in);
 	public String nl = System.lineSeparator();
-	public User user;
+	public User user;// used to store the current user.
 	
 	public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException {
 		PlayerClientLauncher pcl = new PlayerClientLauncher();
+		System.out.println("Welcome to Kieren Millar's Quiz Player" + System.lineSeparator());
 		pcl.loadLoginMenu();
 
 	}
 	
 	private void loadLoginMenu() throws RemoteException, MalformedURLException, NotBoundException {
-		System.out.println("To login please indicate if you are a new user (1) a returning user (2)");
+		System.out.println("To login please indicate if you are a new user (1) a returning user (2)" + nl);
 		boolean finished = false;
 		do{
 			switch (input.nextLine()){
@@ -45,7 +51,7 @@ public class PlayerClientLauncher {
 	private void loadMainMenu() throws MalformedURLException, RemoteException, NotBoundException{
 		boolean finished = false;
 		do{
-			System.out.println("Welcome, what would you like to do:" + nl +
+			System.out.println("Welcome " + user.getName() + " what would you like to do:" + nl +
 					"1. Play Quizes" + nl + 
 					"0. LogOut");
 			switch (input.nextLine()){
@@ -65,11 +71,12 @@ public class PlayerClientLauncher {
 		System.out.println("Please select a quiz to play (1, 2, 3...)" + nl);
 		int quizListSize = qs.getQuizs().size();
 		if (quizListSize > 0){
+			System.out.println("Currently availible Quiz's:" + nl);
 			for (int i = 0; i < quizListSize; i++){
 				System.out.println(qs.getQuizTitles(i));
 			}
 		}else{
-			System.out.println("There are currently no active quizes");
+			System.out.println("There are currently no active quizes" + nl + "GoodBye");
 			System.exit(0);
 		}
 		int quizToPlay = 0;
@@ -87,7 +94,7 @@ public class PlayerClientLauncher {
 		QuizService qs = connectToQuizServer();
 		int score = 0;
 		int numberOfQuestions = qs.getNumberOfQuestions(quizId, "activeQuizList");
-		int time = LocalTime.now().toSecondOfDay();
+		int time = LocalTime.now().toSecondOfDay();//used to determine the time it takes the user to finish the quiz.
 		for(int i = 0; i < numberOfQuestions; i++){
 			Question tempQuestion = qs.getQuestion(quizId, i, "activeQuizList");
 			System.out.println(tempQuestion.getName() + nl);
@@ -105,7 +112,7 @@ public class PlayerClientLauncher {
 				}
 			}while(!finished);
 		}
-		time = LocalTime.now().toSecondOfDay() - time;
+		time = LocalTime.now().toSecondOfDay() - time;//used to determine the time it takes the user to finish the quiz.
 		System.out.println("Your score was: " + qs.finishTakingQuiz(quizId, user, score, time));
 	}
 
