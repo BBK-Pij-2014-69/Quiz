@@ -4,6 +4,12 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * This service is used for creating and storing quiz's on a server.
+ * 
+ * @author Kieren Millar
+ *
+ */
 public interface QuizService extends Remote {
 	
 	int createEmptyQuiz(User creator, String quizTitle) throws RemoteException;

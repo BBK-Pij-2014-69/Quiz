@@ -4,7 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * This is a service for storing User data on the server.
+ * This is a service for creating and storing User data on the server.
  * 
  * @author Kieren Millar
  */
