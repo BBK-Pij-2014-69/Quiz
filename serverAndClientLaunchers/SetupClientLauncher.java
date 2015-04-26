@@ -77,7 +77,8 @@ public class SetupClientLauncher {
 			try{
 				if (currentQuizId == 0) setCurrentQuizId("close", "activeQuizList");
 				if(currentQuizId == -1){
-					System.out.println("no quizes to close");
+					System.out.println("no quiz's to close");
+					currentQuizId = 0;
 					return;
 				}
 				winner = qs.closeQuiz(currentQuizId);
@@ -102,7 +103,8 @@ public class SetupClientLauncher {
 		QuizService qs = connectToQuizServer();
 		setCurrentQuizId("activate", "quizList");
 		if(currentQuizId == -1){
-			System.out.println("no quizes to activate");
+			System.out.println("no quiz's to activate");
+			currentQuizId =0;
 			return;
 		}
 		System.out.println("Are you sure you want to activate your quiz (it can not be amended after this point)?   (y/n)");
@@ -136,7 +138,8 @@ public class SetupClientLauncher {
 		if (currentQuizId == 0) setCurrentQuizId("amend", "quizList");
 		boolean finished = false;
 		if(currentQuizId == -1){
-			System.out.println("no quizes to ammend");
+			System.out.println("no quiz's to ammend");
+			currentQuizId = 0;
 			return;
 		}
 		do{
@@ -164,6 +167,8 @@ public class SetupClientLauncher {
 				currentQuizId = qs.checkQuizandCreator(user, Integer.parseInt(input.nextLine()), listToCheck);
 				if (currentQuizId == 0) currentQuizId = -1;
 				finished = true;
+			}catch (NumberFormatException ex){
+				System.out.println("not a number, please try again");
 			}catch (IllegalArgumentException e){
 				System.out.println(e.getMessage());
 			}

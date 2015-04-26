@@ -52,7 +52,7 @@ public class PlayerClientLauncher {
 		boolean finished = false;
 		do{
 			System.out.println("Welcome " + user.getName() + " what would you like to do:" + nl +
-					"1. Play Quizes" + nl + 
+					"1. Play Quiz's" + nl + 
 					"0. LogOut");
 			switch (input.nextLine()){
 			case "0" : finished = true;
@@ -63,20 +63,21 @@ public class PlayerClientLauncher {
 				break;
 			}
 		}while(!finished);
+		System.out.println("GoodBye");
 		System.exit(0);
 	}
 	
 	private void loadQuizMenu() throws MalformedURLException, RemoteException, NotBoundException {
 		QuizService qs = connectToQuizServer();
-		System.out.println("Please select a quiz to play (1, 2, 3...)" + nl);
+		System.out.println("Please select a quiz to play (1, 2, 3...) from the list of");
 		int quizListSize = qs.getQuizs().size();
 		if (quizListSize > 0){
-			System.out.println("Currently availible Quiz's:" + nl);
+			System.out.println("currently availible Quiz's:" + nl);
 			for (int i = 0; i < quizListSize; i++){
 				System.out.println(qs.getQuizTitles(i));
 			}
 		}else{
-			System.out.println("There are currently no active quizes" + nl + "GoodBye");
+			System.out.println("There are currently no active quiz's" + nl + "GoodBye");
 			System.exit(0);
 		}
 		int quizToPlay = 0;
@@ -97,7 +98,7 @@ public class PlayerClientLauncher {
 		int time = LocalTime.now().toSecondOfDay();//used to determine the time it takes the user to finish the quiz.
 		for(int i = 0; i < numberOfQuestions; i++){
 			Question tempQuestion = qs.getQuestion(quizId, i, "activeQuizList");
-			System.out.println(tempQuestion.getName() + nl);
+			System.out.println(i + ". " + tempQuestion.getName());
 			for(Answer a : tempQuestion.getPossibleAnswers()){
 				System.out.println(a.getAnswerId() + ". " + a.getAnswer() + nl);
 			}
