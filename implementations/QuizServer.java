@@ -26,9 +26,9 @@ import quiz.interfaces.User;
 public class QuizServer extends UnicastRemoteObject implements QuizService {
 
 	private static final long serialVersionUID = -6976763377726698928L;
-	private static List<Quiz> quizList = new ArrayList<Quiz>();
-	private static List<Quiz> activeQuizList = new ArrayList<Quiz>();
-	private static int quizId = 0;
+	private static List<Quiz> quizList = new ArrayList<Quiz>();//Stores non-active quiz's (editable)
+	private static List<Quiz> activeQuizList = new ArrayList<Quiz>();//Stores activated quiz's (non-Editable)
+	private static int quizId = 0;//used to give unique ids to a quiz's.
 	private static final CompletedQuizUser defaultUser = new CompletedQuizUserImpl(new UserImpl("no one", "a"), 0, 0); //used for comparison and empty list.
 	private static final File file = new File("quizServer.txt");
 	
@@ -125,7 +125,7 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 	 */
 	@Override
 	public int checkQuizandCreator(User user, int id, String listToCheck) throws RemoteException {
-		List<Quiz> whichList = null;
+		List<Quiz> whichList = null;//used to distinguish which list is to be accessed.
 		if (listToCheck.equals("activeQuizList")){
 			whichList = activeQuizList;
 		}else{
@@ -150,7 +150,7 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 	@Override
 	public int getNumberOfQuestions(int currentQuizId, String listToCheck) throws RemoteException {
 		int temp = 0;
-		List<Quiz> whichList = null;
+		List<Quiz> whichList = null;//used to distinguish which list is to be accessed.
 		if (listToCheck.equals("activeQuizList")){
 			whichList = activeQuizList;
 		}else{
@@ -184,9 +184,9 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void deleteQuestion(int currentQuizId, int i) throws RemoteException {
+	public void deleteQuestion(int currentQuizId, int index) throws RemoteException {
 		for (Quiz q : quizList){
-			if (q.getId() == currentQuizId) q.getQuestionList().remove(i);
+			if (q.getId() == currentQuizId) q.getQuestionList().remove(index);
 		}
 	}
 
@@ -210,7 +210,7 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 	 */
 	@Override
 	public CompletedQuizUser closeQuiz(int id) throws RemoteException {
-		CompletedQuizUser temp = defaultUser;
+		CompletedQuizUser temp = defaultUser;//holds and returns the winner.
 		ArrayList<CompletedQuizUser> tempList = null;
 		int indexToRemove = -1;
 		for (Quiz q : activeQuizList){
@@ -224,13 +224,13 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 			}
 		}
 		for (CompletedQuizUser c : tempList){
-			if (c.getScore() > temp.getScore()){
+			if (c.getScore() > temp.getScore()){//determines winner based on score
 				temp = c;
-			}else if (c.getScore() == temp.getScore()){
+			}else if (c.getScore() == temp.getScore()){//determines winner based on time taken when scores are equal.
 				if (c.getTime() < temp.getTime()) temp = c;
 			}
 		}
-		activeQuizList.remove(indexToRemove);
+		activeQuizList.remove(indexToRemove);//deletes selected quiz from list.
 		return temp;
 	}
 
@@ -277,7 +277,7 @@ public class QuizServer extends UnicastRemoteObject implements QuizService {
 			}
 			if (intToReturn == 0) throw new IllegalArgumentException("Not an active quiz");
 		}catch (NumberFormatException e){
-			throw new IllegalArgumentException("Not a number");
+			throw new IllegalArgumentException("Invallid input, please enter a number");
 		}
 		return intToReturn;
 	}

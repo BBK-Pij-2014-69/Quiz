@@ -22,10 +22,10 @@ public class QuizImpl implements Quiz, Serializable {
 	private int quizId;
 	private List<Question> questionList = new LinkedList<Question>();
 	private User creator;
-	private List<CompletedQuizUser> userList = new ArrayList<CompletedQuizUser>();
+	private List<CompletedQuizUser> userList = new ArrayList<CompletedQuizUser>();//stores users who have completed the quiz.
 	
 	/**
-	 * Constructor accepting a quiz name, an id, and a user (the creator of the quiz).
+	 * Constructor accepting a quiz name, an id (unique), and a user (the creator of the quiz).
 	 * 
 	 * @param quizTitle
 	 * @param quizId

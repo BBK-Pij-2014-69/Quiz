@@ -78,7 +78,7 @@ public class UserServer extends UnicastRemoteObject implements UserService {
 				}
 			}
 		}
-		throw new IllegalArgumentException("user does not exist");
+		throw new IllegalArgumentException("invalid username");
 	}
 	
 	/**

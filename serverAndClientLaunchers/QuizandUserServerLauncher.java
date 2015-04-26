@@ -8,7 +8,12 @@ import java.rmi.registry.LocateRegistry;
 import quiz.implementations.QuizServer;
 import quiz.implementations.UserServer;
 
-
+/**
+ * Just a simple server launcher.
+ * 
+ * @author Kieren Millar
+ *
+ */
 public class QuizandUserServerLauncher {
 	private static QuizServer quizServer = null;
 	private static UserServer userServer = null;
@@ -20,10 +25,14 @@ public class QuizandUserServerLauncher {
 				quizServer.saveData();
 				userServer.saveData();
 			}
-		});
+		});//shutdown hook used to ensure saving of data.
 		qsl.launch();
 
 	}
+	
+	/**
+	 * Launch method for a server taken from pij classnotes for an rmis server.
+	 */
 	private void launch() {
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());
