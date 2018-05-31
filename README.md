@@ -19,6 +19,4 @@ then launch one or both of the clients (they are
 independent). The server.policy file is required
 for launching.
 
-Note: The quiz system is working but as of today 
-there is little testing, due to my running short of
-time and wanting to have a working system to submit.
+
